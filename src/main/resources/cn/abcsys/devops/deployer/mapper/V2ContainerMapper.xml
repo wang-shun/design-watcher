@@ -1,0 +1,616 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.abcsys.devops.v2.deployer.db.dao.V2ContainerMapper" >
+  <resultMap id="BaseResultMap" type="cn.abcsys.devops.v2.deployer.db.model.V2Container" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="pod_id" property="podId" jdbcType="INTEGER" />
+    <result column="image_group_id" property="imageGroupId" jdbcType="INTEGER" />
+    <result column="version_id" property="versionId" jdbcType="INTEGER" />
+    <result column="application_id" property="applicationId" jdbcType="INTEGER" />
+    <result column="project_id" property="projectId" jdbcType="INTEGER" />
+    <result column="env_id" property="envId" jdbcType="INTEGER" />
+    <result column="pod_name" property="podName" jdbcType="VARCHAR" />
+    <result column="real_name" property="realName" jdbcType="VARCHAR" />
+    <result column="container_name" property="containerName" jdbcType="VARCHAR" />
+    <result column="image_name_tag" property="imageNameTag" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="max_cpu" property="maxCpu" jdbcType="VARCHAR" />
+    <result column="max_memory" property="maxMemory" jdbcType="VARCHAR" />
+    <result column="host_ip" property="hostIp" jdbcType="VARCHAR" />
+    <result column="host_name" property="hostName" jdbcType="VARCHAR" />
+    <result column="create_datetime" property="createDatetime" jdbcType="TIMESTAMP" />
+    <result column="start_datetime" property="startDatetime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, pod_id, image_group_id, version_id, application_id, project_id, env_id, pod_name,
+    real_name, container_name, image_name_tag, status, max_cpu, max_memory, host_ip,
+    host_name, create_datetime, start_datetime
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from v2_container
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectByProjectId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from v2_container
+    where project_id = #{projectId,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectByEnvId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from v2_container
+    where env_id = #{envId,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectByPodId" resultMap="BaseResultMap" parameterType="cn.abcsys.devops.v2.deployer.db.model.V2Pod" >
+    select
+    <include refid="Base_Column_List" />
+    from v2_container
+    where pod_id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectAllLive" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from v2_container
+    where id > 0
+    <if test="container.envId != null and container.envId>0" >
+      and env_id = #{container.envId,jdbcType=INTEGER}
+    </if>
+    <if test="container.applicationId != null and container.applicationId > 0" >
+      and application_id = #{container.applicationId,jdbcType=INTEGER}
+    </if>
+    <if test="container.versionId != null and container.versionId > 0" >
+      and version_id = #{container.versionId,jdbcType=INTEGER}
+    </if>
+    <if test="container.imageGroupId != null and container.imageGroupId > 0" >
+      and image_group_id = #{container.imageGroupId,jdbcType=INTEGER}
+    </if>
+    <if test="container.projectId != null and container.projectId > 0" >
+      and project_id = #{container.projectId,jdbcType=INTEGER}
+    </if>
+    <if test="container.imageGroupId != null and container.imageGroupId >0 " >
+      and image_group_id = #{container.imageGroupId,jdbcType=INTEGER}
+    </if>
+    and status != "false"
+    limit #{offset,jdbcType=INTEGER},#{rows,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from v2_container
+    where id > 0
+    <if test="container.envId != null and container.envId>0" >
+      and env_id = #{container.envId,jdbcType=INTEGER}
+    </if>
+    <if test="container.applicationId != null and container.applicationId > 0" >
+      and application_id = #{container.applicationId,jdbcType=INTEGER}
+    </if>
+    <if test="container.versionId != null and container.versionId > 0" >
+      and version_id = #{container.versionId,jdbcType=INTEGER}
+    </if>
+    <if test="container.imageGroupId != null and container.imageGroupId > 0" >
+      and image_group_id = #{container.imageGroupId,jdbcType=INTEGER}
+    </if>
+    <if test="container.projectId != null and container.projectId > 0" >
+      and project_id = #{container.projectId,jdbcType=INTEGER}
+    </if>
+    <if test="container.imageGroupId != null and container.imageGroupId >0 " >
+      and image_group_id = #{container.imageGroupId,jdbcType=INTEGER}
+    </if>
+    limit #{offset,jdbcType=INTEGER},#{rows,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectOldContainers" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from v2_container
+    where id > 0
+    and status = "old"
+  </select>
+
+  <select id="selectByFields" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from v2_container
+    where id > 0
+    <if test="container.envId != null and container.envId>0" >
+      and env_id = #{container.envId,jdbcType=INTEGER}
+    </if>
+    <if test="container.applicationId != null and container.applicationId > 0" >
+      and application_id = #{container.applicationId,jdbcType=INTEGER}
+    </if>
+    <if test="container.versionId != null and container.versionId > 0" >
+      and version_id = #{container.versionId,jdbcType=INTEGER}
+    </if>
+    <if test="container.imageGroupId != null and container.imageGroupId > 0" >
+      and image_group_id = #{container.imageGroupId,jdbcType=INTEGER}
+    </if>
+    <if test="container.projectId != null and container.projectId > 0" >
+      and project_id = #{container.projectId,jdbcType=INTEGER}
+    </if>
+    <if test="container.status != null" >
+      and status = #{container.status,jdbcType=VARCHAR}
+    </if>
+    <if test="container.podName != null and container.podName != ''" >
+      and pod_name like '%${container.podName}%'
+    </if>
+    <if test="container.realName != null and container.realName != ''" >
+      and real_name  like '%${container.realName}%'
+    </if>
+    limit #{offset,jdbcType=INTEGER},#{rows,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectByFieldsAndProjectIds" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from v2_container
+    where id > 0
+    <if test="container.envId != null and container.envId>0" >
+      and env_id = #{container.envId,jdbcType=INTEGER}
+    </if>
+    <if test="container.applicationId != null and container.applicationId > 0" >
+      and application_id = #{container.applicationId,jdbcType=INTEGER}
+    </if>
+    <if test="container.versionId != null and container.versionId > 0" >
+      and version_id = #{container.versionId,jdbcType=INTEGER}
+    </if>
+    <if test="container.imageGroupId != null and container.imageGroupId > 0" >
+      and image_group_id = #{container.imageGroupId,jdbcType=INTEGER}
+    </if>
+    <if test="container.status != null" >
+      and status = #{container.status,jdbcType=VARCHAR}
+    </if>
+    <if test="container.podName != null and container.podName != ''" >
+      and pod_name like '%${container.podName}%'
+    </if>
+    <if test="container.realName != null and container.realName != ''" >
+      and real_name  like '%${container.realName}%'
+    </if>
+    AND project_id IN
+    <foreach collection="projectIds" item="eachId" index="index"
+                               open="(" close=")" separator=",">
+    #{eachId,jdbcType=INTEGER}
+  </foreach>
+    limit #{offset,jdbcType=INTEGER},#{rows,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectCountByFieldsAndProjectIds" resultType="java.lang.Integer">
+    select
+    COUNT(*)
+    from v2_container
+    where id > 0
+    <if test="container.envId != null and container.envId>0" >
+      and env_id = #{container.envId,jdbcType=INTEGER}
+    </if>
+    <if test="container.applicationId != null and container.applicationId > 0" >
+      and application_id = #{container.applicationId,jdbcType=INTEGER}
+    </if>
+    <if test="container.versionId != null and container.versionId > 0" >
+      and version_id = #{container.versionId,jdbcType=INTEGER}
+    </if>
+    <if test="container.imageGroupId != null and container.imageGroupId > 0" >
+      and image_group_id = #{container.imageGroupId,jdbcType=INTEGER}
+    </if>
+    <if test="container.status != null" >
+      and status = #{container.status,jdbcType=VARCHAR}
+    </if>
+    <if test="container.podName != null and container.podName != ''" >
+      and pod_name like '%${container.podName}%'
+    </if>
+    <if test="container.realName != null and container.realName != ''" >
+      and real_name  like '%${container.realName}%'
+    </if>
+    <if test="projectIds != null" >
+    AND project_id IN
+    <foreach collection="projectIds" item="eachId" index="index"
+             open="(" close=")" separator=",">
+      #{eachId,jdbcType=INTEGER}
+    </foreach>
+    </if>
+  </select>
+
+  <select id="selectCountByFields" resultType="java.lang.Integer">
+    select
+    count(*)
+    from v2_container
+    where id > 0
+    <if test="container.envId != null and container.envId>0" >
+      and env_id = #{container.envId,jdbcType=INTEGER}
+    </if>
+    <if test="container.applicationId != null and container.applicationId > 0" >
+      and application_id = #{container.applicationId,jdbcType=INTEGER}
+    </if>
+    <if test="container.versionId != null and container.versionId > 0" >
+      and version_id = #{container.versionId,jdbcType=INTEGER}
+    </if>
+    <if test="container.imageGroupId != null and container.imageGroupId > 0" >
+      and image_group_id = #{container.imageGroupId,jdbcType=INTEGER}
+    </if>
+    <if test="container.projectId != null and container.projectId > 0" >
+      and project_id = #{container.projectId,jdbcType=INTEGER}
+    </if>
+    <if test="container.imageGroupId != null and container.imageGroupId >0 " >
+      and image_group_id = #{container.imageGroupId,jdbcType=INTEGER}
+    </if>
+    <if test="container.status != null" >
+      and status = #{container.status,jdbcType=VARCHAR}
+    </if>
+    <if test="container.podName != null and container.podName != ''" >
+      and pod_name like '%${container.podName}%'
+    </if>
+    <if test="container.realName != null and container.realName != ''" >
+      and real_name  like '%${container.realName}%'
+    </if>
+  </select>
+
+
+  <select id="selectCountOfAllLive" resultType="java.lang.Integer">
+    select
+    count(*)
+    from v2_container
+    where id > 0
+    <if test="container.envId != null and container.envId>0" >
+      and env_id = #{container.envId,jdbcType=INTEGER}
+    </if>
+    <if test="container.applicationId != null and container.applicationId > 0" >
+      and application_id = #{container.applicationId,jdbcType=INTEGER}
+    </if>
+    <if test="container.versionId != null and container.versionId > 0" >
+      and version_id = #{container.versionId,jdbcType=INTEGER}
+    </if>
+    <if test="container.imageGroupId != null and container.imageGroupId > 0" >
+      and image_group_id = #{container.imageGroupId,jdbcType=INTEGER}
+    </if>
+    <if test="container.projectId != null and container.projectId > 0" >
+      and project_id = #{container.projectId,jdbcType=INTEGER}
+    </if>
+    <if test="container.imageGroupId != null and container.imageGroupId >0 " >
+      and image_group_id = #{container.imageGroupId,jdbcType=INTEGER}
+    </if>
+    and status = "true"
+  </select>
+
+  <select id="selectLiveCountByFieldsAndProjectIds" resultType="java.lang.Integer">
+    select
+    COUNT(*)
+    from v2_container
+    where id > 0
+    <if test="container.envId != null and container.envId>0" >
+      and env_id = #{container.envId,jdbcType=INTEGER}
+    </if>
+    <if test="container.applicationId != null and container.applicationId > 0" >
+      and application_id = #{container.applicationId,jdbcType=INTEGER}
+    </if>
+    <if test="container.versionId != null and container.versionId > 0" >
+      and version_id = #{container.versionId,jdbcType=INTEGER}
+    </if>
+    <if test="container.imageGroupId != null and container.imageGroupId > 0" >
+      and image_group_id = #{container.imageGroupId,jdbcType=INTEGER}
+    </if>
+    <if test="container.status != null" >
+      and status = #{container.status,jdbcType=VARCHAR}
+    </if>
+    <if test="container.podName != null and container.podName != ''" >
+      and pod_name like '%${container.podName}%'
+    </if>
+    <if test="container.realName != null and container.realName != ''" >
+      and real_name  like '%${container.realName}%'
+    </if>
+    <if test="projectIds != null" >
+      AND project_id IN
+      <foreach collection="projectIds" item="eachId" index="index"
+               open="(" close=")" separator=",">
+        #{eachId,jdbcType=INTEGER}
+      </foreach>
+    </if>
+    AND status = "true"
+  </select>
+
+  <select id="getRunningApplicationCount" resultType="java.lang.Integer">
+    select
+    count(DISTINCT application_id)
+    from v2_container
+    where env_id = #{envId,jdbcType=INTEGER}
+    and status = "true"
+  </select>
+
+  <select id="getRunningApplicationCountByProjectIdList" resultType="java.lang.Integer">
+    select
+    count(DISTINCT application_id)
+    from v2_container
+    where project_id IN
+    <foreach collection="list" item="eachId" index="index"
+                             open="(" close=")" separator=",">
+    #{eachId,jdbcType=INTEGER}
+  </foreach>
+    and status = "true"
+  </select>
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from v2_container
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+  <delete id="deleteByImageGroupId" parameterType="java.lang.Integer" >
+    delete from v2_container
+    where image_group_id = #{imageGroupId,jdbcType=INTEGER}
+  </delete>
+
+  <insert id="insert" parameterType="cn.abcsys.devops.v2.deployer.db.model.V2Container" useGeneratedKeys="true" keyProperty="id">
+    insert into v2_container (id, pod_id, image_group_id,
+    version_id, application_id, project_id,
+    env_id, pod_name, real_name,
+    container_name, image_name_tag, status,
+    max_cpu, max_memory, host_ip,
+    host_name, create_datetime, start_datetime
+    )
+    values (#{id,jdbcType=INTEGER}, #{podId,jdbcType=INTEGER}, #{imageGroupId,jdbcType=INTEGER},
+    #{versionId,jdbcType=INTEGER}, #{applicationId,jdbcType=INTEGER}, #{projectId,jdbcType=INTEGER},
+    #{envId,jdbcType=INTEGER}, #{podName,jdbcType=VARCHAR}, #{realName,jdbcType=VARCHAR},
+    #{containerName,jdbcType=VARCHAR}, #{imageNameTag,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR},
+    #{maxCpu,jdbcType=VARCHAR}, #{maxMemory,jdbcType=VARCHAR}, #{hostIp,jdbcType=VARCHAR},
+    #{hostName,jdbcType=VARCHAR}, #{createDatetime,jdbcType=TIMESTAMP}, #{startDatetime,jdbcType=TIMESTAMP}
+    )
+  </insert>
+  <insert id="insertSelective" parameterType="cn.abcsys.devops.v2.deployer.db.model.V2Container" useGeneratedKeys="true" keyProperty="id">
+    insert into v2_container
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="podId != null" >
+        pod_id,
+      </if>
+      <if test="imageGroupId != null" >
+        image_group_id,
+      </if>
+      <if test="versionId != null" >
+        version_id,
+      </if>
+      <if test="applicationId != null" >
+        application_id,
+      </if>
+      <if test="projectId != null" >
+        project_id,
+      </if>
+      <if test="envId != null" >
+        env_id,
+      </if>
+      <if test="podName != null" >
+        pod_name,
+      </if>
+      <if test="realName != null" >
+        real_name,
+      </if>
+      <if test="containerName != null" >
+        container_name,
+      </if>
+      <if test="imageNameTag != null" >
+        image_name_tag,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="maxCpu != null" >
+        max_cpu,
+      </if>
+      <if test="maxMemory != null" >
+        max_memory,
+      </if>
+      <if test="hostIp != null" >
+        host_ip,
+      </if>
+      <if test="hostName != null" >
+        host_name,
+      </if>
+      <if test="createDatetime != null" >
+        create_datetime,
+      </if>
+      <if test="startDatetime != null" >
+        start_datetime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="podId != null" >
+        #{podId,jdbcType=INTEGER},
+      </if>
+      <if test="imageGroupId != null" >
+        #{imageGroupId,jdbcType=INTEGER},
+      </if>
+      <if test="versionId != null" >
+        #{versionId,jdbcType=INTEGER},
+      </if>
+      <if test="applicationId != null" >
+        #{applicationId,jdbcType=INTEGER},
+      </if>
+      <if test="projectId != null" >
+        #{projectId,jdbcType=INTEGER},
+      </if>
+      <if test="envId != null" >
+        #{envId,jdbcType=INTEGER},
+      </if>
+      <if test="podName != null" >
+        #{podName,jdbcType=VARCHAR},
+      </if>
+      <if test="realName != null" >
+        #{realName,jdbcType=VARCHAR},
+      </if>
+      <if test="containerName != null" >
+        #{containerName,jdbcType=VARCHAR},
+      </if>
+      <if test="imageNameTag != null" >
+        #{imageNameTag,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="maxCpu != null" >
+        #{maxCpu,jdbcType=VARCHAR},
+      </if>
+      <if test="maxMemory != null" >
+        #{maxMemory,jdbcType=VARCHAR},
+      </if>
+      <if test="hostIp != null" >
+        #{hostIp,jdbcType=VARCHAR},
+      </if>
+      <if test="hostName != null" >
+        #{hostName,jdbcType=VARCHAR},
+      </if>
+      <if test="createDatetime != null" >
+        #{createDatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="startDatetime != null" >
+        #{startDatetime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.abcsys.devops.v2.deployer.db.model.V2Container" >
+    update v2_container
+    <set >
+      <if test="podId != null" >
+        pod_id = #{podId,jdbcType=INTEGER},
+      </if>
+      <if test="imageGroupId != null" >
+        image_group_id = #{imageGroupId,jdbcType=INTEGER},
+      </if>
+      <if test="versionId != null" >
+        version_id = #{versionId,jdbcType=INTEGER},
+      </if>
+      <if test="applicationId != null" >
+        application_id = #{applicationId,jdbcType=INTEGER},
+      </if>
+      <if test="projectId != null" >
+        project_id = #{projectId,jdbcType=INTEGER},
+      </if>
+      <if test="envId != null" >
+        env_id = #{envId,jdbcType=INTEGER},
+      </if>
+      <if test="podName != null" >
+        pod_name = #{podName,jdbcType=VARCHAR},
+      </if>
+      <if test="realName != null" >
+        real_name = #{realName,jdbcType=VARCHAR},
+      </if>
+      <if test="containerName != null" >
+        container_name = #{containerName,jdbcType=VARCHAR},
+      </if>
+      <if test="imageNameTag != null" >
+        image_name_tag = #{imageNameTag,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="maxCpu != null" >
+        max_cpu = #{maxCpu,jdbcType=VARCHAR},
+      </if>
+      <if test="maxMemory != null" >
+        max_memory = #{maxMemory,jdbcType=VARCHAR},
+      </if>
+      <if test="hostIp != null" >
+        host_ip = #{hostIp,jdbcType=VARCHAR},
+      </if>
+      <if test="hostName != null" >
+        host_name = #{hostName,jdbcType=VARCHAR},
+      </if>
+      <if test="createDatetime != null" >
+        create_datetime = #{createDatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="startDatetime != null" >
+        start_datetime = #{startDatetime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <update id="updateByPrimaryKeySelectiveStrict">
+    update v2_container
+    <set >
+      <if test="record.podId != null" >
+        pod_id = #{record.podId,jdbcType=INTEGER},
+      </if>
+      <if test="record.imageGroupId != null" >
+        image_group_id = #{record.imageGroupId,jdbcType=INTEGER},
+      </if>
+      <if test="record.versionId != null" >
+        version_id = #{record.versionId,jdbcType=INTEGER},
+      </if>
+      <if test="record.applicationId != null" >
+        application_id = #{record.applicationId,jdbcType=INTEGER},
+      </if>
+      <if test="record.projectId != null" >
+        project_id = #{record.projectId,jdbcType=INTEGER},
+      </if>
+      <if test="record.envId != null" >
+        env_id = #{record.envId,jdbcType=INTEGER},
+      </if>
+      <if test="record.podName != null" >
+        pod_name = #{record.podName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.realName != null" >
+        real_name = #{record.realName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.containerName != null" >
+        container_name = #{record.containerName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.imageNameTag != null" >
+        image_name_tag = #{record.imageNameTag,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null" >
+        status = #{record.status,jdbcType=VARCHAR},
+      </if>
+      <if test="record.maxCpu != null" >
+        max_cpu = #{record.maxCpu,jdbcType=VARCHAR},
+      </if>
+      <if test="record.maxMemory != null" >
+        max_memory = #{record.maxMemory,jdbcType=VARCHAR},
+      </if>
+      <if test="record.hostIp != null" >
+        host_ip = #{record.hostIp,jdbcType=VARCHAR},
+      </if>
+      <if test="record.hostName != null" >
+        host_name = #{record.hostName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createDatetime != null" >
+        create_datetime = #{record.createDatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.startDatetime != null" >
+        start_datetime = #{record.startDatetime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{record.id,jdbcType=INTEGER}
+    and pod_name = #{record.podName,jdbcType=INTEGER}
+  </update>
+
+  <update id="updateByPrimaryKey" parameterType="cn.abcsys.devops.v2.deployer.db.model.V2Container" >
+    update v2_container
+    set pod_id = #{podId,jdbcType=INTEGER},
+    image_group_id = #{imageGroupId,jdbcType=INTEGER},
+    version_id = #{versionId,jdbcType=INTEGER},
+    application_id = #{applicationId,jdbcType=INTEGER},
+    project_id = #{projectId,jdbcType=INTEGER},
+    env_id = #{envId,jdbcType=INTEGER},
+    pod_name = #{podName,jdbcType=VARCHAR},
+    real_name = #{realName,jdbcType=VARCHAR},
+    container_name = #{containerName,jdbcType=VARCHAR},
+    image_name_tag = #{imageNameTag,jdbcType=VARCHAR},
+    status = #{status,jdbcType=VARCHAR},
+    max_cpu = #{maxCpu,jdbcType=VARCHAR},
+    max_memory = #{maxMemory,jdbcType=VARCHAR},
+    host_ip = #{hostIp,jdbcType=VARCHAR},
+    host_name = #{hostName,jdbcType=VARCHAR},
+    create_datetime = #{createDatetime,jdbcType=TIMESTAMP},
+    start_datetime = #{startDatetime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

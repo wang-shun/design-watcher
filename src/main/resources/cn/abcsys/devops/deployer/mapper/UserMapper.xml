@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.abcsys.devops.deployer.dao.UserMapper" >
+  <resultMap id="BaseResultMap" type="cn.abcsys.devops.deployer.model.User" >
+    <id column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="user_login_name" property="userLoginName" jdbcType="VARCHAR" />
+    <result column="user_login_password" property="userLoginPassword" jdbcType="VARCHAR" />
+    <result column="user_real_name" property="userRealName" jdbcType="VARCHAR" />
+    <result column="user_gender" property="userGender" jdbcType="INTEGER" />
+    <result column="user_level" property="userLevel" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    user_id, user_login_name, user_login_password, user_real_name, user_gender, user_level
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from user
+    where user_id = #{userId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from user
+    where user_id = #{userId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="cn.abcsys.devops.deployer.model.User" >
+    insert into user (user_id, user_login_name, user_login_password, 
+      user_real_name, user_gender, user_level
+      )
+    values (#{userId,jdbcType=INTEGER}, #{userLoginName,jdbcType=VARCHAR}, #{userLoginPassword,jdbcType=VARCHAR}, 
+      #{userRealName,jdbcType=VARCHAR}, #{userGender,jdbcType=INTEGER}, #{userLevel,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="cn.abcsys.devops.deployer.model.User" >
+    insert into user
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="userLoginName != null" >
+        user_login_name,
+      </if>
+      <if test="userLoginPassword != null" >
+        user_login_password,
+      </if>
+      <if test="userRealName != null" >
+        user_real_name,
+      </if>
+      <if test="userGender != null" >
+        user_gender,
+      </if>
+      <if test="userLevel != null" >
+        user_level,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="userLoginName != null" >
+        #{userLoginName,jdbcType=VARCHAR},
+      </if>
+      <if test="userLoginPassword != null" >
+        #{userLoginPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="userRealName != null" >
+        #{userRealName,jdbcType=VARCHAR},
+      </if>
+      <if test="userGender != null" >
+        #{userGender,jdbcType=INTEGER},
+      </if>
+      <if test="userLevel != null" >
+        #{userLevel,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.abcsys.devops.deployer.model.User" >
+    update user
+    <set >
+      <if test="userLoginName != null" >
+        user_login_name = #{userLoginName,jdbcType=VARCHAR},
+      </if>
+      <if test="userLoginPassword != null" >
+        user_login_password = #{userLoginPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="userRealName != null" >
+        user_real_name = #{userRealName,jdbcType=VARCHAR},
+      </if>
+      <if test="userGender != null" >
+        user_gender = #{userGender,jdbcType=INTEGER},
+      </if>
+      <if test="userLevel != null" >
+        user_level = #{userLevel,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where user_id = #{userId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.abcsys.devops.deployer.model.User" >
+    update user
+    set user_login_name = #{userLoginName,jdbcType=VARCHAR},
+      user_login_password = #{userLoginPassword,jdbcType=VARCHAR},
+      user_real_name = #{userRealName,jdbcType=VARCHAR},
+      user_gender = #{userGender,jdbcType=INTEGER},
+      user_level = #{userLevel,jdbcType=VARCHAR}
+    where user_id = #{userId,jdbcType=INTEGER}
+  </update>
+</mapper>

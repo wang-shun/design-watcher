@@ -1,0 +1,11 @@
+# create method:
+http://133.133.134.92:8888/kubernetes/create.do?instanceCore.instanceNamespace=default&instanceCore.instanceName=tomcat&instanceCore.instanceUuid=127.0.0.1:8080&instanceCore.instanceType=kubernetes&instanceCore.instanceImage=registry.cn-hangzhou.aliyuncs.com/xuyuanjia/docker:tomcat-centos&instanceCore.instanceCpu=1&instanceCore.instanceMemory=1Gi&instanceCore.instanceNetwork=bridge&instanceCore.instanceImagePullSecret=my-secret&instanceVolumesList[0].instanceVolumesType=nfs&instanceVolumesList[0].instanceVolumesName=nfs-volume&instanceVolumesList[0].instanceVolumesMountPath=/home&instanceVolumesList[0].instanceVolumesServer=kube-master&instanceVolumesList[0].instanceVolumesPath=/opt/NfsFileSystem
+
+# start method:
+http://133.133.134.92:8888/kubernetes/start.do?instanceCore.instanceRename=default-20170616092145004-tomcat&instancePorts[0].instancePortsPort=8080&instancePorts[0].instancePortsNodePort=30123
+
+#stop method:
+http://133.133.134.92:8888/kubernetes/stop.do?instanceCore.instanceRename=default-20170616092145004-tomcat
+
+#delete method:
+http://133.133.134.92:8888/kubernetes/delete.do?instanceCore.instanceRename=default-20170616092145004-tomcat
